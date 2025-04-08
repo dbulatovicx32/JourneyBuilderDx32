@@ -1,25 +1,60 @@
+import { useState } from 'react';
 import { Handle, Position, useEdges } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
 import { BlueprintNode } from '../models/actionBlueprint.model';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-export default function ActionBlueprintFormNode(props: NodeProps<BlueprintNode>) {
-  const edges = useEdges();
-  const showTargetEdge = edges.find((edge) => edge.target === props.id);
-  const showSourceEdge = edges.find((edge) => edge.source === props.id);
+import { Card, CardContent, Typography } from '@mui/material';
+import FormPrefillDialog from './FormPrefillDialog';
 
-  console.log('props', props);
-  console.log('edges', edges);
+export default function FormNode(props: NodeProps<BlueprintNode>) {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const edges = useEdges();
+
+  // Find if this node has any incoming or outgoing connections
+  const hasIncomingEdge = edges.some((edge) => edge.target === props.id);
+  const hasOutgoingEdge = edges.some((edge) => edge.source === props.id);
+
+  const handleCardClick = () => {
+    console.log('props', props)
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   return (
-    <div>
-      {showTargetEdge && <Handle type="target" position={Position.Left} />}
+    <>
+      {hasIncomingEdge && <Handle type="target" position={Position.Left} />}
 
-      <Card sx={{ height: '100%' }}>
-        <CardContent>{props.data.name}</CardContent>
+      <Card
+        sx={{
+          minWidth: 200,
+          cursor: 'pointer',
+          '&:hover': {
+            boxShadow: 6,
+            borderColor: 'white',
+            borderWidth: '1px',
+            borderStyle: 'solid',
+          },
+        }}
+        onClick={handleCardClick}
+      >
+        <CardContent>
+          <Typography variant="h6" component="div" noWrap>
+            {props.data.name}
+          </Typography>
+          <Typography variant="body2" >
+            {hasIncomingEdge ? `Inputs: ${edges.filter((edge) => edge.target === props.id).length}` : 'No inputs'}
+          </Typography>
+          <Typography variant="body2">
+            {hasOutgoingEdge ? `Outputs: ${edges.filter((edge) => edge.source === props.id).length}` : 'No outputs'}
+          </Typography>
+        </CardContent>
       </Card>
 
-      {showSourceEdge && <Handle type="source" position={Position.Right} />}
-    </div>
+      {hasOutgoingEdge && <Handle type="source" position={Position.Right} />}
+
+      <FormPrefillDialog open={dialogOpen} onClose={handleCloseDialog} node={props} />
+    </>
   );
 }
