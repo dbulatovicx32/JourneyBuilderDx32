@@ -12,8 +12,8 @@ export default function FormPrefillDialog({ onClose }: FormPrefillDialogProps) {
   if (!selectedForm) return null;
 
   return (
-    <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle sx={{ pb: 1 }}>Form Details</DialogTitle>
+    <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle sx={{ pb: 1 }}>Prefill </DialogTitle>
 
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <FormFieldsList form={selectedForm} />
