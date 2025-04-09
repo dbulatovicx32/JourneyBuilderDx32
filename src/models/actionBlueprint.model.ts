@@ -1,4 +1,4 @@
-import { Edge, Node } from '@xyflow/react';
+import { Node } from '@xyflow/react';
 
 export interface ActionBlueprint {
   $schema: string;
@@ -8,7 +8,7 @@ export interface ActionBlueprint {
   description: string;
   category: string;
   nodes: BlueprintNode[];
-  edges: Edge[];
+  edges: BlueprintEdge[];
   forms: BlueprintForm[];
   branches: [];
   triggers: [];
@@ -27,6 +27,12 @@ export interface NodeData extends Record<string, unknown> {
   component_id: string;
   prerequisites: string[];
   input_mapping?: PrefillMapping;
+}
+
+export interface BlueprintEdge {
+  id: string;
+  source: string;
+  target: string;
 }
 
 export interface BlueprintForm {
@@ -65,8 +71,10 @@ export interface PrefillMapping {
 }
 
 export interface PrefillSource {
+  type: string;
   sourceId: string;
   fieldId: string;
+  sourceNodeId?: string; // Optional field to store the source node ID
 }
 
 export interface AvailableSourceField {
