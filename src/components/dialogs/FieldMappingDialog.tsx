@@ -12,6 +12,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  TextField,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
 import useJourneyBuilder from '../../hooks/useJourneyBuilder';
@@ -30,11 +31,8 @@ interface FieldMappingDialogProps {
 
 export default function FieldMappingDialog({ onClose, field, onSelectMapping }: FieldMappingDialogProps) {
   const { selectedNode, actionBlueprint } = useJourneyBuilder();
-  const [selectedSource, setSelectedSource] = useState<{
-    formId: string;
-    fieldId: string;
-    nodeId: string;
-  } | null>(null);
+  const [selectedSource, setSelectedSource] = useState<{ formId: string; fieldId: string; nodeId: string } | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const upstreamForms = useMemo(() => {
     if (!selectedNode || !actionBlueprint) return [] as FormWithSource[];
@@ -60,16 +58,18 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
   const renderFormFields = (form: FormWithSource) => {
     const { form: formData, sourceNode } = form;
 
-    return Object.keys(formData.field_schema.properties).map((fieldId) => (
-      <ListItem key={fieldId} disablePadding>
-        <ListItemButton
-          selected={selectedSource?.formId === formData.id && selectedSource?.fieldId === fieldId && selectedSource?.nodeId === sourceNode.id}
-          onClick={() => handleFieldSelection(formData.id, fieldId, sourceNode.id)}
-        >
-          <ListItemText primary={fieldId} />
-        </ListItemButton>
-      </ListItem>
-    ));
+    return Object.keys(formData.field_schema.properties)
+      .filter((fieldId) => fieldId.toLowerCase().includes(searchTerm.toLowerCase()))
+      .map((fieldId) => (
+        <ListItem key={fieldId} disablePadding>
+          <ListItemButton
+            selected={selectedSource?.formId === formData.id && selectedSource?.fieldId === fieldId && selectedSource?.nodeId === sourceNode.id}
+            onClick={() => handleFieldSelection(formData.id, fieldId, sourceNode.id)}
+          >
+            <ListItemText primary={fieldId} />
+          </ListItemButton>
+        </ListItem>
+      ));
   };
 
   const renderAccordionItem = (form: FormWithSource) => {
@@ -106,9 +106,7 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
       <DialogTitle>Select data element to map</DialogTitle>
 
       <DialogContent>
-        <Typography variant="h6" gutterBottom sx={{ mt: 1 }}>
-          Search available Data
-        </Typography>
+        <TextField fullWidth label="Filter fields by ID" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 
         {renderAccordionList()}
       </DialogContent>
