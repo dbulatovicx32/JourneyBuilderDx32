@@ -16,9 +16,10 @@ import {
 } from '@mui/material';
 import { useMemo, useState } from 'react';
 import useJourneyBuilder from '../../hooks/useJourneyBuilder';
-import { FormField, PrefillSource } from '../../models/actionBlueprint.model';
+import { FormField, GlobalDataSource, PrefillSource } from '../../models/actionBlueprint.model';
 import { getUpstreamFormsWithSource, FormWithSource } from '../../utils/fieldMappingHelper';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import GLOBAL_DATA_SOURCES from '../../data/globalFieldData';
 
 interface FieldMappingDialogProps {
   onClose: () => void;
@@ -31,7 +32,12 @@ interface FieldMappingDialogProps {
 
 export default function FieldMappingDialog({ onClose, field, onSelectMapping }: FieldMappingDialogProps) {
   const { selectedNode, actionBlueprint } = useJourneyBuilder();
-  const [selectedSource, setSelectedSource] = useState<{ formId: string; fieldId: string; nodeId: string } | null>(null);
+  const [selectedSource, setSelectedSource] = useState<{
+    formId: string;
+    fieldId: string;
+    nodeId: string;
+    isGlobal?: boolean;
+  } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const upstreamForms = useMemo(() => {
@@ -40,8 +46,8 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
     return getUpstreamFormsWithSource(selectedNode, actionBlueprint);
   }, [selectedNode, actionBlueprint]);
 
-  const handleFieldSelection = (sourceId: string, fieldId: string, nodeId: string) => {
-    setSelectedSource({ formId: sourceId, fieldId, nodeId });
+  const handleFieldSelection = (sourceId: string, fieldId: string, nodeId: string, isGlobal?: boolean) => {
+    setSelectedSource({ formId: sourceId, fieldId, nodeId, isGlobal });
   };
 
   const handleSave = () => {
@@ -82,9 +88,7 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
           aria-controls={`form-${sourceNode.id}-${formData.id}-content`}
           id={`form-${sourceNode.id}-${formData.id}-header`}
         >
-          <Typography>
-            {sourceNode.data.name} ({sourceNode.id})
-          </Typography>
+          <Typography>{sourceNode.data.name}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <List component="div" disablePadding>
@@ -95,8 +99,30 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
     );
   };
 
-  const renderAccordionList = () => {
-    return upstreamForms.map((form) => renderAccordionItem(form));
+  const renderGlobalDataSource = (dataSourceId: string, dataSource: GlobalDataSource) => {
+    return (
+      <Accordion key={dataSourceId}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`global-${dataSourceId}-content`} id={`global-${dataSourceId}-header`}>
+          <Typography>{dataSource.name}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List component="div" disablePadding>
+            {Object.entries(dataSource.fields)
+              .filter(([fieldId]) => fieldId.toLowerCase().includes(searchTerm.toLowerCase()))
+              .map(([fieldId]) => (
+                <ListItem key={fieldId} disablePadding>
+                  <ListItemButton
+                    selected={selectedSource?.formId === dataSource.id && selectedSource?.fieldId === fieldId}
+                    onClick={() => handleFieldSelection(dataSource.id, fieldId, dataSource.id)}
+                  >
+                    <ListItemText primary={fieldId} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+    );
   };
 
   if (!selectedNode || !actionBlueprint) return null;
@@ -106,9 +132,10 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
       <DialogTitle>Select data element to map</DialogTitle>
 
       <DialogContent>
-        <TextField fullWidth label="Filter fields by ID" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <TextField fullWidth label="Filter fields by ID" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} sx={{ mb: 2, mt: 1 }} />
 
-        {renderAccordionList()}
+        {Object.entries(GLOBAL_DATA_SOURCES).map(([dataSourceId, dataSource]) => renderGlobalDataSource(dataSourceId, dataSource))}
+        {upstreamForms.map((form) => renderAccordionItem(form))}
       </DialogContent>
 
       <DialogActions>

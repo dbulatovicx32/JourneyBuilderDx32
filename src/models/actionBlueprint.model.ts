@@ -82,3 +82,15 @@ export interface AvailableSourceField {
   fieldId: string;
   fieldLabel: string;
 }
+
+export interface GlobalDataSource {
+  id: string;
+  name: string;
+  fields: Record<string, GlobalDataField>;
+}
+
+export interface GlobalDataField {
+  type: string;
+  title: string;
+  description?: string;
+}

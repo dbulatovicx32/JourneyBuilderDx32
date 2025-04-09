@@ -1,22 +1,20 @@
 # Journey Builder
 
-A React application that visualizes form workflows as directed acyclic graphs (DAGs) and allows users to configure field mappings between connected forms.
+My take on the challenge, not too happy with it >.> shouldve taken a day off to work on it rather than doing 2-3 hour increments per day.
 
 ## Features
 
-- Visualize form workflows as interactive nodes and edges
+- React Flow integration for interactive graph visualization
 - View and edit form field prefill mappings
 - Traverse the DAG to find upstream form fields for prefilling
-- React Flow integration for interactive graph visualization
 
-## Tech Stack
+## Libs
 
 - **React** - UI library
 - **TypeScript** - Type safety
 - **React Flow** - Graph visualization
 - **Material UI** - Component library
 - **Vite** - Build tool
-- **Vitest** - Testing framework
 
 ## Getting Started
 
@@ -75,44 +73,9 @@ src/
 └── main.tsx               # Entry point
 ```
 
-## Testing
-
-Run tests with:
-
-```bash
-npm test
-```
-
 ## Extending the Project
 
-### Adding New Data Sources
+### Reusability
 
-To add a new data source for form field prefill:
-
-1. Update the `getUpstreamFormsWithSource` function in `src/utils/fieldMappingHelper.ts` to include the new data source.
-
-2. Implement a new utility function in `fieldMappingHelper.ts` that retrieves the data from your new source.
-
-3. Modify the `FieldMappingDialog` component to display the new data source.
-
-### Adding New Form Field Types
-
-To add support for new form field types:
-
-1. Update the `FormField` interface in `src/models/actionBlueprint.model.ts` to include the new field type.
-
-2. Modify the `FormPrefillDialog` component to handle the new field type.
-
-## Design Decisions
-
-- **Context API**: We use React's Context API for state management to avoid prop drilling and make data accessible throughout the component tree.
-
-- **Component Composition**: The UI is built using a composition of smaller, reusable components to improve maintainability and readability.
-
-- **Custom Hooks**: We use custom hooks like `useJourneyBuilder` to encapsulate and share logic between components.
-
-- **DAG Traversal**: We implement graph traversal algorithms to find upstream forms and their fields for prefill mapping.
-
-## License
-
-MIT
+At its current state, components arent really reusable, lack of time.
+It would be best to create generic wrappers for dialogs, lists and list items if they are going to be used elsewhere in the project.
