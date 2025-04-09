@@ -14,9 +14,9 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
-import useJourneyBuilder from '../hooks/useJourneyBuilder';
-import { FormField, PrefillSource } from '../models/actionBlueprint.model';
-import { getUpstreamFormsWithSource, FormWithSource } from '../utils/fieldMappingHelper';
+import useJourneyBuilder from '../../hooks/useJourneyBuilder';
+import { FormField, PrefillSource } from '../../models/actionBlueprint.model';
+import { getUpstreamFormsWithSource, FormWithSource } from '../../utils/fieldMappingHelper';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface FieldMappingDialogProps {

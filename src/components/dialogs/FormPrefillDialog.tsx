@@ -13,9 +13,9 @@ import {
   Paper,
   IconButton,
 } from '@mui/material';
-import { FormField, PrefillSource } from '../models/actionBlueprint.model';
+import { FormField, PrefillSource } from '../../models/actionBlueprint.model';
 import FieldMappingDialog from './FieldMappingDialog';
-import useJourneyBuilder from '../hooks/useJourneyBuilder';
+import useJourneyBuilder from '../../hooks/useJourneyBuilder';
 import CloseIcon from '@mui/icons-material/Close';
 import StorageIcon from '@mui/icons-material/Storage';
 

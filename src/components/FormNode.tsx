@@ -1,4 +1,3 @@
-// src/components/FormNode.tsx
 import { Handle, Position, useEdges } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
 import { BlueprintNode } from '../models/actionBlueprint.model';

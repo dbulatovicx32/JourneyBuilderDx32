@@ -1,11 +1,10 @@
-// src/components/JourneyBuilder.tsx
 import { useEffect, useMemo, useState } from 'react';
 import { getBlueprintById } from '../api/actionBlueprint.api';
 import { ActionBlueprint, BlueprintNode, BlueprintForm, PrefillMapping, PrefillSource } from '../models/actionBlueprint.model';
 import { ReactFlow, Background, NodeProps } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import FormNode from './FormNode';
-import FormPrefillDialog from './FormPrefillDialog';
+import FormPrefillDialog from './dialogs/FormPrefillDialog';
 import JourneyBuilderContext from '../context/JourneyBuilderContext';
 
 type NodeMappings = {
