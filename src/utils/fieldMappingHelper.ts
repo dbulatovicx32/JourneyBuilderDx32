@@ -11,16 +11,12 @@ export function getUpstreamFormsWithSource(selectedNode: NodeProps<BlueprintNode
   const upstreamNodes = getUpstreamNodesTopologicallySorted(nodeId, blueprint.nodes, blueprint.edges);
   const upstreamForms: FormWithSource[] = [];
 
-  console.log('%c blueprint ', 'background: #222; color: #bada55', blueprint);
-  console.log('%c nodeId ', 'background: #222; color: #bada55', selectedNode.data.name);
-
   for (const node of upstreamNodes) {
     const formId = node.data.component_id;
     const nodeForm = blueprint.forms.find((form) => form.id === formId);
 
     if (nodeForm) upstreamForms.push({ form: nodeForm, sourceNode: node });
   }
-  console.log('%c upstreamForms ', 'background: #222; color: #bada55', upstreamForms);
 
   return upstreamForms;
 }

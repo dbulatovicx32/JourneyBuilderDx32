@@ -29,15 +29,6 @@ export default function JourneyBuilder() {
 
         setActionBlueprint({ ...data, edges });
         console.log('data', data);
-
-        // Initialize prefill mappings from node data if they exist
-        const initialMappings: NodeMappings = {};
-        data.nodes.forEach((node: BlueprintNode) => {
-          if (node.data.input_mapping) {
-            initialMappings[node.id] = node.data.input_mapping;
-          }
-        });
-        setPrefillMappings(initialMappings);
       } catch (error) {
         console.error('Failed to fetch journey data:', error);
       } finally {
@@ -59,6 +50,10 @@ export default function JourneyBuilder() {
 
     setSelectedForm(form);
   }, [selectedNode, actionBlueprint]);
+
+  useEffect(() => {
+    console.log('Current prefill mappings:', prefillMappings);
+  }, [prefillMappings]);
 
   const setPrefillMapping = (nodeId: string, fieldId: string, mapping: PrefillSource | null) => {
     setPrefillMappings((prevMappings) => {
