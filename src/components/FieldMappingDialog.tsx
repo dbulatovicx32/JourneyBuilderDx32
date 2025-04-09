@@ -48,9 +48,55 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
 
   const handleSave = () => {
     if (selectedSource && selectedNode) {
-      const mapping: PrefillSource = { sourceFormId: selectedSource.formId, fieldId: selectedSource.fieldId, sourceNodeId: selectedSource.nodeId };
+      const mapping: PrefillSource = {
+        sourceFormId: selectedSource.formId,
+        fieldId: selectedSource.fieldId,
+        sourceNodeId: selectedSource.nodeId,
+      };
       onSelectMapping(field.fieldId, mapping);
     }
+  };
+
+  const renderFormFields = (form: FormWithSource) => {
+    const { form: formData, sourceNode } = form;
+
+    return Object.keys(formData.field_schema.properties).map((fieldId) => (
+      <ListItem key={fieldId} disablePadding>
+        <ListItemButton
+          selected={selectedSource?.formId === formData.id && selectedSource?.fieldId === fieldId && selectedSource?.nodeId === sourceNode.id}
+          onClick={() => handleFieldSelection(formData.id, fieldId, sourceNode.id)}
+        >
+          <ListItemText primary={fieldId} />
+        </ListItemButton>
+      </ListItem>
+    ));
+  };
+
+  const renderAccordionItem = (form: FormWithSource) => {
+    const { form: formData, sourceNode } = form;
+
+    return (
+      <Accordion key={`${sourceNode.id}-${formData.id}`}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls={`form-${sourceNode.id}-${formData.id}-content`}
+          id={`form-${sourceNode.id}-${formData.id}-header`}
+        >
+          <Typography>
+            {sourceNode.data.name} ({sourceNode.id})
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List component="div" disablePadding>
+            {renderFormFields(form)}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+
+  const renderAccordionList = () => {
+    return upstreamForms.map((form) => renderAccordionItem(form));
   };
 
   if (!selectedNode || !actionBlueprint) return null;
@@ -64,33 +110,7 @@ export default function FieldMappingDialog({ onClose, field, onSelectMapping }: 
           Search available Data
         </Typography>
 
-        {upstreamForms.map(({ form, sourceNode }) => (
-          <Accordion key={`${sourceNode.id}-${form.id}`}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`form-${sourceNode.id}-${form.id}-content`}
-              id={`form-${sourceNode.id}-${form.id}-header`}
-            >
-              <Typography>
-                {sourceNode.data.name} ({sourceNode.id})
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <List component="div" disablePadding>
-                {Object.keys(form.field_schema.properties).map((fieldId) => (
-                  <ListItem key={fieldId} disablePadding>
-                    <ListItemButton
-                      selected={selectedSource?.formId === form.id && selectedSource?.fieldId === fieldId && selectedSource?.nodeId === sourceNode.id}
-                      onClick={() => handleFieldSelection(form.id, fieldId, sourceNode.id)}
-                    >
-                      <ListItemText primary={fieldId} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+        {renderAccordionList()}
       </DialogContent>
 
       <DialogActions>
