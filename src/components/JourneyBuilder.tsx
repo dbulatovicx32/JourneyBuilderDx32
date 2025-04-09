@@ -25,7 +25,7 @@ export default function JourneyBuilder() {
         setActionBlueprint({ ...data, edges });
         console.log('data', data)
       } catch (error) {
-        console.error('Failed to fetch journey data:', error);
+        console.error('Failed to fetch blueprint data:', error);
       } finally {
         setLoading(false);
       }
@@ -40,7 +40,6 @@ export default function JourneyBuilder() {
   return (
     <div style={{ height: '100%' }}>
       <JourneyBuilderContext.Provider value={{ actionBlueprint, selectedNode, setSelectedNode }}>
-        {JSON.stringify(selectedNode, null, 2)}
 
         <ReactFlow nodes={actionBlueprint.nodes} edges={actionBlueprint.edges} nodeTypes={nodeTypes}>
           <Background />

@@ -10,43 +10,25 @@ interface FormPrefillDialogProps {
 export default function FormPrefillDialog({ onClose }: FormPrefillDialogProps) {
   const { selectedNode, actionBlueprint } = useJourneyBuilder();
 
-  // Find the associated form for this node
   const associatedForm = useMemo(() => {
     if (!selectedNode || !actionBlueprint) return null;
 
     const formId = selectedNode.data.component_id;
+    const associatedForm = actionBlueprint.forms.find((form: any) => form.id === formId);
 
-    console.log('form', actionBlueprint.forms.find((form: any) => form.id === formId))
-    return actionBlueprint.forms.find((form: any) => form.id === formId) || null;
+    console.log('actionBlueprint', actionBlueprint);
+    console.log('associatedForm', associatedForm);
+
+    return associatedForm || null;
   }, [selectedNode, actionBlueprint]);
 
   if (!selectedNode) return null;
 
   return (
-    <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
+    <Dialog open={true} onClose={onClose} maxWidth="lg">
       <DialogTitle sx={{ pb: 1 }}>Form Details: {selectedNode.data.name}</DialogTitle>
 
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {/* Node Data Section */}
-        <Paper variant="outlined" sx={{ p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Node Data
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Box
-            sx={{
-              fontFamily: 'monospace',
-              overflow: 'auto',
-              maxHeight: '30vh',
-            }}
-          >
-            <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-              {JSON.stringify(selectedNode, null, 2)}
-            </Typography>
-          </Box>
-        </Paper>
-
-        {/* Associated Form Section */}
         <Paper variant="outlined" sx={{ p: 2 }}>
           <Typography variant="h6" gutterBottom>
             Associated Form {associatedForm ? `(${associatedForm.id})` : '(Not Found)'}
@@ -68,8 +50,6 @@ export default function FormPrefillDialog({ onClose }: FormPrefillDialogProps) {
             )}
           </Box>
         </Paper>
-
-        
       </DialogContent>
 
       <DialogActions>
