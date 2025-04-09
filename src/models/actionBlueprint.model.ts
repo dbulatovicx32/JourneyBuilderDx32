@@ -71,10 +71,9 @@ export interface PrefillMapping {
 }
 
 export interface PrefillSource {
-  type: string;
-  sourceId: string;
   fieldId: string;
-  sourceNodeId?: string; // Optional field to store the source node ID
+  sourceFormId: string;
+  sourceNodeId: string;
 }
 
 export interface AvailableSourceField {

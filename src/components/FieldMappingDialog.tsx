@@ -33,13 +33,8 @@ export default function FieldMappingDialog({ onClose, field }: FieldMappingDialo
     return getUpstreamFormsWithSource(selectedNode, actionBlueprint);
   }, [selectedNode, actionBlueprint]);
 
-  const handleFieldSelection = (sourceId: string, fieldId: string, nodeId: string) => {
-    const selectedMapping: PrefillSource = {
-      type: 'direct_form',
-      sourceId,
-      fieldId,
-      sourceNodeId: nodeId,
-    };
+  const handleFieldSelection = (sourceFormId: string, fieldId: string, sourceNodeId: string) => {
+    const selectedMapping: PrefillSource = { sourceFormId, fieldId, sourceNodeId };
 
     console.log(`Selected mapping for field ${field.fieldId}:`, selectedMapping);
     // onClose();
