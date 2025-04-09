@@ -1,6 +1,5 @@
 import { GlobalDataSource } from '../models/actionBlueprint.model';
 
-// Static global data sources that are always available
 export const GLOBAL_DATA_SOURCES: Record<string, GlobalDataSource> = {
   action: {
     id: 'global_action',

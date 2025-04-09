@@ -78,4 +78,8 @@ src/
 ### Reusability
 
 At its current state, components arent really reusable, lack of time.
-It would be best to create generic wrappers for dialogs, lists and list items if they are going to be used elsewhere in the project.
+It would be best to create generic wrappers for eg: dialogs, lists and list items if they are going to be used elsewhere in the project.
+
+### Testing
+
+Was planning to do Vitests, but the deadline prevents me from doing that.
